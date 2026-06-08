@@ -1,6 +1,7 @@
 package com.kino.my_video_service.service;
 
 import com.kino.my_video_service.entities.UserEntity;
+import com.kino.my_video_service.exceprion.LoginAlreadyTakenException;
 import com.kino.my_video_service.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,16 @@ public class UserService {
         this.userRepository = repository;
     }
 
-    public UserEntity createUser(UserEntity userEntity) {
-        if (userRepository.existsByLogin(userEntity.getLogin())) {
-            throw new IllegalStateException("Login already taken");
+    public UserEntity createUser(String login, String displayName, String password) {
+        if (userRepository.existsByLogin(login)) {
+            throw new LoginAlreadyTakenException("Login already taken");
         }
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setLogin(login);
+        userEntity.setDisplayName(displayName);
+        userEntity.setPasswordHash(password); // Надо захешировать пароль
+
         return userRepository.save(userEntity);
     }
 }
