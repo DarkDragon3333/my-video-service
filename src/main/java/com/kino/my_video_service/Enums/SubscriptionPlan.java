@@ -1,4 +1,4 @@
-package com.kino.my_video_service.Enums;
+package com.kino.my_video_service.enums;
 
 public enum SubscriptionPlan {
     BASE,

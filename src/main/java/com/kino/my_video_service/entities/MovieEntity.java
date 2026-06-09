@@ -1,7 +1,7 @@
 package com.kino.my_video_service.entities;
 
-import com.kino.my_video_service.Enums.Genre;
-import com.kino.my_video_service.Enums.SubscriptionPlan;
+import com.kino.my_video_service.enums.Genre;
+import com.kino.my_video_service.enums.SubscriptionPlan;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

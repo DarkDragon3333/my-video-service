@@ -1,7 +1,7 @@
 package com.kino.my_video_service.service;
 
 import com.kino.my_video_service.entities.UserEntity;
-import com.kino.my_video_service.exceprion.LoginAlreadyTakenException;
+import com.kino.my_video_service.exception.LoginAlreadyTakenException;
 import com.kino.my_video_service.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
