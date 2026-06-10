@@ -1,5 +1,6 @@
 package com.kino.my_video_service.controller;
 
+import com.kino.my_video_service.dto.AuthenticationRequest;
 import com.kino.my_video_service.dto.CreateUserRequest;
 import com.kino.my_video_service.dto.UserResponse;
 import com.kino.my_video_service.entities.UserEntity;
@@ -23,6 +24,12 @@ public class UserController {
 
         UserEntity tempEntity = userService.createUser(request.getLogin(), request.getDisplayName(), request.getPassword());
         return new UserResponse(tempEntity.getId(), tempEntity.getLogin(), tempEntity.getDisplayName());
+    }
+
+    @PostMapping("/users/authentication")
+    public UserResponse authentication(@RequestBody AuthenticationRequest request){
+        UserEntity userEntity = userService.authenticationUser(request.getLogin(), request.getPassword());
+        return new UserResponse(userEntity.getId(), userEntity.getLogin(), userEntity.getDisplayName());
     }
 
 }

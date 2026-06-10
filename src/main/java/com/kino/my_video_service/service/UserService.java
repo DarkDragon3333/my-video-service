@@ -1,6 +1,7 @@
 package com.kino.my_video_service.service;
 
 import com.kino.my_video_service.entities.UserEntity;
+import com.kino.my_video_service.exception.FailedAuthenticationException;
 import com.kino.my_video_service.exception.LoginAlreadyTakenException;
 import com.kino.my_video_service.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,5 +30,16 @@ public class UserService {
         userEntity.setPasswordHash(passwordEncoder.encode(password));
 
         return userRepository.save(userEntity);
+    }
+
+    public UserEntity authenticationUser(String login, String password) {
+        UserEntity userEntity =
+                userRepository.findByLogin(login).orElseThrow(FailedAuthenticationException::new);
+
+        if (!passwordEncoder.matches(password, userEntity.getPasswordHash())) {
+            throw new FailedAuthenticationException();
+        }
+
+        return userEntity;
     }
 }
