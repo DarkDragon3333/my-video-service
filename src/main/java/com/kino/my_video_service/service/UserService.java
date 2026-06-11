@@ -3,6 +3,7 @@ package com.kino.my_video_service.service;
 import com.kino.my_video_service.entities.UserEntity;
 import com.kino.my_video_service.exception.FailedAuthenticationException;
 import com.kino.my_video_service.exception.LoginAlreadyTakenException;
+import com.kino.my_video_service.exception.UserNotFoundException;
 import com.kino.my_video_service.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,9 @@ public class UserService {
         }
 
         return userEntity;
+    }
+
+    public UserEntity findUserById(Long id){
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 }

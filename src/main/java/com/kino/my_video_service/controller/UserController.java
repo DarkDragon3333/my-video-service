@@ -32,4 +32,10 @@ public class UserController {
         return new UserResponse(userEntity.getId(), userEntity.getLogin(), userEntity.getDisplayName());
     }
 
+    @GetMapping("/{id}")
+    public UserResponse getUserById(@PathVariable Long id){
+        UserEntity userEntity = userService.findUserById(id);
+        return new UserResponse(userEntity.getId(), userEntity.getLogin(), userEntity.getDisplayName());
+    }
+
 }
