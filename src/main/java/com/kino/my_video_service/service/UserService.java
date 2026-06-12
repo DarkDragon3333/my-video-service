@@ -3,12 +3,14 @@ package com.kino.my_video_service.service;
 import com.kino.my_video_service.entities.UserEntity;
 import com.kino.my_video_service.exception.FailedAuthenticationException;
 import com.kino.my_video_service.exception.LoginAlreadyTakenException;
+import com.kino.my_video_service.exception.SameLoginException;
 import com.kino.my_video_service.exception.UserNotFoundException;
 import com.kino.my_video_service.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -57,6 +59,21 @@ public class UserService {
     public UserEntity patchDisplayName(Long id, String displayName){
         UserEntity userEntity = findUserById(id);
         userEntity.setDisplayName(displayName);
+        userRepository.save(userEntity);
+        return userEntity;
+    }
+
+    public UserEntity patchLogin(Long id, String newLogin){
+        UserEntity userEntity = findUserById(id);
+
+        if (newLogin.equals(userEntity.getLogin())){
+            throw new SameLoginException(id, userEntity.getLogin(), newLogin);
+        }
+        if (userRepository.existsByLogin(newLogin)) {
+            throw new LoginAlreadyTakenException("Login already taken");
+        }
+
+        userEntity.setLogin(newLogin);
         userRepository.save(userEntity);
         return userEntity;
     }
