@@ -62,4 +62,10 @@ public class UserController {
         return new UserResponse(userEntity.getId(), userEntity.getLogin(), userEntity.getDisplayName());
     }
 
+    @PatchMapping("/{id}/password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void patchPassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request){
+        userService.patchPassword(id, request.getOldPassword(), request.getNewPassword());
+    }
+
 }

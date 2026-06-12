@@ -1,10 +1,7 @@
 package com.kino.my_video_service.service;
 
 import com.kino.my_video_service.entities.UserEntity;
-import com.kino.my_video_service.exception.FailedAuthenticationException;
-import com.kino.my_video_service.exception.LoginAlreadyTakenException;
-import com.kino.my_video_service.exception.SameLoginException;
-import com.kino.my_video_service.exception.UserNotFoundException;
+import com.kino.my_video_service.exception.*;
 import com.kino.my_video_service.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -76,5 +73,16 @@ public class UserService {
         userEntity.setLogin(newLogin);
         userRepository.save(userEntity);
         return userEntity;
+    }
+
+    public void patchPassword(Long id, String oldPassword, String newPassword){
+        UserEntity userEntity = findUserById(id);
+
+        if (!passwordEncoder.matches(oldPassword, userEntity.getPasswordHash())){
+            throw new WrongPasswordException(id);
+        }
+
+        userEntity.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(userEntity);
     }
 }
