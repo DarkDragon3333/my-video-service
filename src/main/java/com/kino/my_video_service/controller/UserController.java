@@ -1,6 +1,7 @@
 package com.kino.my_video_service.controller;
 
 import com.kino.my_video_service.dto.AuthenticationRequest;
+import com.kino.my_video_service.dto.ChangeDisplayNameRequest;
 import com.kino.my_video_service.dto.CreateUserRequest;
 import com.kino.my_video_service.dto.UserResponse;
 import com.kino.my_video_service.entities.UserEntity;
@@ -50,6 +51,12 @@ public class UserController {
                     new UserResponse(user.getId(), user.getLogin(), user.getDisplayName())
 
         ).toList();
+    }
+
+    @PatchMapping("/{id}")
+    public UserResponse patchDisplayName(@PathVariable Long id,@RequestBody ChangeDisplayNameRequest request){
+        UserEntity userEntity = userService.patchDisplayName(id, request.getDisplayName());
+        return new UserResponse(userEntity.getId(), userEntity.getLogin(), userEntity.getDisplayName());
     }
 
 }

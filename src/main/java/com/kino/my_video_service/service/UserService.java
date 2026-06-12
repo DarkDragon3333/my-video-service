@@ -8,7 +8,6 @@ import com.kino.my_video_service.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,5 +52,12 @@ public class UserService {
 
     public List<UserEntity> findAll() {
         return userRepository.findAll();
+    }
+
+    public UserEntity patchDisplayName(Long id, String displayName){
+        UserEntity userEntity = findUserById(id);
+        userEntity.setDisplayName(displayName);
+        userRepository.save(userEntity);
+        return userEntity;
     }
 }
