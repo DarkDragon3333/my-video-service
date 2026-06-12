@@ -8,6 +8,9 @@ import com.kino.my_video_service.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -36,6 +39,17 @@ public class UserController {
     public UserResponse getUserById(@PathVariable Long id){
         UserEntity userEntity = userService.findUserById(id);
         return new UserResponse(userEntity.getId(), userEntity.getLogin(), userEntity.getDisplayName());
+    }
+
+    @GetMapping()
+    public List<UserResponse> findAll(){
+        List<UserEntity> list = userService.findAll();
+
+        return list.stream().map(
+                user ->
+                    new UserResponse(user.getId(), user.getLogin(), user.getDisplayName())
+
+        ).toList();
     }
 
 }

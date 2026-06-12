@@ -8,6 +8,9 @@ import com.kino.my_video_service.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -46,5 +49,9 @@ public class UserService {
 
     public UserEntity findUserById(Long id){
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    public List<UserEntity> findAll() {
+        return userRepository.findAll();
     }
 }
