@@ -85,4 +85,8 @@ public class UserService {
         userEntity.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepository.save(userEntity);
     }
+
+    public void deleteUser(Long id){
+        userRepository.deleteById(id);
+    }
 }

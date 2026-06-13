@@ -68,4 +68,10 @@ public class UserController {
         userService.patchPassword(id, request.getOldPassword(), request.getNewPassword());
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Long id){
+        userService.deleteUser(id);
+    }
+
 }
