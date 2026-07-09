@@ -1,5 +1,8 @@
 package com.kino.my_video_service.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +11,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CreateUserRequest {
+    @Size(min = 3, max = 50)
+    @NotBlank
     private String login;
+
+    @Size(min = 8, max = 72)
+    @NotBlank
     private String password;
+
+    @Size(max = 50)
+    @NotBlank
     private String displayName;
 }
