@@ -4,6 +4,7 @@ import com.kino.my_video_service.dto.ExceptionHandlerResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -94,6 +95,18 @@ public class ExceptionsHandler {
                 ZonedDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Failed validation",
+                httpServletRequest.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionHandlerResponse dataConflict(HttpServletRequest httpServletRequest){
+        log.warn("Data conflict: {}", httpServletRequest.getRequestURI());
+        return new ExceptionHandlerResponse(
+                ZonedDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "Data conflict",
                 httpServletRequest.getRequestURI()
         );
     }
