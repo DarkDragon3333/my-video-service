@@ -1,5 +1,7 @@
 package com.kino.my_video_service.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +10,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ChangePasswordRequest {
+    @NotBlank
     private String oldPassword;
+
+    @Size(min = 8, max = 72)
+    @NotBlank
     private String newPassword;
 }

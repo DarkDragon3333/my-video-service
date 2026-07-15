@@ -52,20 +52,20 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserResponse patchDisplayName(@PathVariable Long id,@RequestBody ChangeDisplayNameRequest request){
+    public UserResponse patchDisplayName(@PathVariable Long id,@RequestBody @Valid ChangeDisplayNameRequest request){
         UserEntity userEntity = userService.patchDisplayName(id, request.getDisplayName());
         return new UserResponse(userEntity.getId(), userEntity.getLogin(), userEntity.getDisplayName());
     }
 
     @PatchMapping("/{id}/login")
-    public UserResponse patchLogin(@PathVariable Long id, @RequestBody ChangeLoginRequest request){
+    public UserResponse patchLogin(@PathVariable Long id, @RequestBody @Valid ChangeLoginRequest request){
         UserEntity userEntity = userService.patchLogin(id, request.getLogin());
         return new UserResponse(userEntity.getId(), userEntity.getLogin(), userEntity.getDisplayName());
     }
 
     @PatchMapping("/{id}/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void patchPassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request){
+    public void patchPassword(@PathVariable Long id, @RequestBody @Valid ChangePasswordRequest request){
         userService.patchPassword(id, request.getOldPassword(), request.getNewPassword());
     }
 
