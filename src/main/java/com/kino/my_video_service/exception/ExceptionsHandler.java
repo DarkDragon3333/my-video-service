@@ -111,18 +111,4 @@ public class ExceptionsHandler {
         );
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionHandlerResponse unexpectedError(
-            Exception exception,
-            HttpServletRequest httpServletRequest
-    ) {
-        log.error("Server error", exception);
-        return new ExceptionHandlerResponse(
-                ZonedDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "server error",
-                httpServletRequest.getRequestURI()
-        );
-    }
 }
