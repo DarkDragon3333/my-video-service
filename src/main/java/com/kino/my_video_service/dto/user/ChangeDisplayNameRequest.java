@@ -1,4 +1,4 @@
-package com.kino.my_video_service.dto;
+package com.kino.my_video_service.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ChangeLoginRequest {
-    @Size(min = 3, max = 50)
+public class ChangeDisplayNameRequest {
+    @Size(max = 50)
     @NotBlank
-    private String login;
+    private String displayName;
 }

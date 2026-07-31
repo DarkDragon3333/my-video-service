@@ -1,6 +1,6 @@
 package com.kino.my_video_service.controller;
 
-import com.kino.my_video_service.dto.*;
+import com.kino.my_video_service.dto.user.*;
 import com.kino.my_video_service.entities.UserEntity;
 import com.kino.my_video_service.service.UserService;
 import jakarta.validation.Valid;
@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")

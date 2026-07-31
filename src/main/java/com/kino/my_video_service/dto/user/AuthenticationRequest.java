@@ -1,4 +1,4 @@
-package com.kino.my_video_service.dto;
+package com.kino.my_video_service.dto.user;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
