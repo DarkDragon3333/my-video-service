@@ -32,7 +32,7 @@ public class MovieEntity {
     @Enumerated(EnumType.STRING)
     private Genre genre;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String description;
 
     @Column(nullable = false)
