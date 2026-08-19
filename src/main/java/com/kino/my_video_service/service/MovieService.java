@@ -22,7 +22,6 @@ public class MovieService {
             String description, LocalDate releaseDate, Integer durationMinutes
     ){
         Duration duration = Duration.ofMinutes(durationMinutes);
-        Integer d = duration.toMinutesPart();
 
         MovieEntity movieEntity = new MovieEntity();
         movieEntity.setTitle(title);
