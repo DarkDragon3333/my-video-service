@@ -1,15 +1,11 @@
 package com.kino.my_video_service.service;
 
 import com.kino.my_video_service.entities.MovieEntity;
-import com.kino.my_video_service.repository.MovieRepository;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import com.kino.my_video_service.enums.Genre;
 import com.kino.my_video_service.enums.SubscriptionPlan;
+import com.kino.my_video_service.repository.MovieRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.time.LocalDate;
@@ -22,13 +18,13 @@ public class MovieServiceTest {
     private MovieService movieService;
 
     @BeforeEach
-    public void initObj(){
+    public void initObj() {
         this.movieRepository = mock(MovieRepository.class);
         this.movieService = new MovieService(movieRepository);
     }
 
     @Test
-    public void createMovie_SuccessCreation(){
+    public void createMovie_SuccessCreation() {
         String title = "Terminator 1";
         SubscriptionPlan requiredPlan = SubscriptionPlan.PREMIUM;
         Genre genre = Genre.ACTION;
