@@ -38,8 +38,21 @@ public class UserServiceTest {
 
     @Test
     public void createUser_successCreate() {
-        userService.createUser("max", "max", "max");
-        verify(userRepository, times(1)).save(any());
+        String login = "max@mail.com";
+        String displayName = "Max";
+        String password = "123456789";
+        String passwordHash = "hashed-password";
+
+        when(passwordEncoder.encode(password)).thenReturn(passwordHash);
+        userService.createUser(login, displayName, password);
+
+        ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(userRepository, times(1)).save(captor.capture());
+
+        UserEntity capturedUser = captor.getValue();
+        assertEquals(login, capturedUser.getLogin());
+        assertEquals(displayName, capturedUser.getDisplayName());
+        assertEquals(passwordHash, capturedUser.getPasswordHash());
     }
 
     @Test
