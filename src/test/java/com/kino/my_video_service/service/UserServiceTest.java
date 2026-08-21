@@ -140,16 +140,10 @@ public class UserServiceTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
         UserEntity testPatchUser = userService.patchLogin(1L, testNewLogin);
-        verify(userRepository, times(1)).save(any());
+        verify(userRepository, times(1)).save(testUser);
 
-        assertEquals(
-                testNewLogin,
-                testUser.getLogin()
-        );
-        assertEquals(
-                testUser,
-                testPatchUser
-        );
+        assertEquals(testNewLogin, testUser.getLogin());
+        assertEquals(testUser, testPatchUser);
     }
 
     @Test
