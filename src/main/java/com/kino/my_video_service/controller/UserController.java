@@ -27,7 +27,7 @@ public class UserController {
         return new UserResponse(tempEntity.getId(), tempEntity.getLogin(), tempEntity.getDisplayName());
     }
 
-    @PostMapping("/users/authentication")
+    @PostMapping("/authentication")
     public UserResponse authentication(@RequestBody AuthenticationRequest request){
         UserEntity userEntity = userService.authenticationUser(request.getLogin(), request.getPassword());
         return new UserResponse(userEntity.getId(), userEntity.getLogin(), userEntity.getDisplayName());
