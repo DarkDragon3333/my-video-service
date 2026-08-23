@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class MovieService {
@@ -37,5 +38,9 @@ public class MovieService {
 
     public MovieEntity getMovie(Long id){
         return movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
+    }
+
+    public List<MovieEntity> findAll(){
+        return movieRepository.findAll();
     }
 }

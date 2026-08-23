@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.List;
 
 @RestController
 @RequestMapping("/movies")
@@ -47,6 +48,20 @@ public class MovieController {
                 movieEntity.getGenre(), movieEntity.getDescription(), movieEntity.getReleaseDate(),
                 durationToMinutes(movieEntity.getDuration()), movieEntity.getRating()
         );
+    }
+
+    @GetMapping
+    public List<MovieResponse> getAll(){
+        List<MovieEntity> movieEntityList = movieService.findAll();
+
+        return movieEntityList.stream().map(
+                movie ->
+                        new MovieResponse(
+                                movie.getId(), movie.getTitle(), movie.getRequiredPlan(),
+                                movie.getGenre(), movie.getDescription(), movie.getReleaseDate(),
+                                durationToMinutes(movie.getDuration()), movie.getRating()
+                        )
+        ).toList();
     }
 
     private Integer durationToMinutes(Duration duration){
