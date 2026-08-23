@@ -3,14 +3,17 @@ package com.kino.my_video_service.service;
 import com.kino.my_video_service.entities.MovieEntity;
 import com.kino.my_video_service.enums.Genre;
 import com.kino.my_video_service.enums.SubscriptionPlan;
+import com.kino.my_video_service.exception.movie.MovieNotFoundException;
 import com.kino.my_video_service.repository.MovieRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class MovieServiceTest {
@@ -48,5 +51,19 @@ public class MovieServiceTest {
         assertEquals(description, movieEntityCapture.getDescription());
         assertEquals(releaseDate, movieEntityCapture.getReleaseDate());
         assertEquals(durationMinutes, Math.toIntExact(movieEntityCapture.getDuration().toMinutes()));
+    }
+
+    @Test
+    public void findMovieById_MovieNotFoundException(){
+        assertThrows(MovieNotFoundException.class, () -> movieService.findMovieById(0L));
+    }
+
+    @Test
+    public void findMovieById_SuccessFind(){
+        Long id = 1L;
+        MovieEntity testMovieEntity = new MovieEntity();
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+        assertEquals(testMovieEntity, movieService.findMovieById(id));
     }
 }
