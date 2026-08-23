@@ -1,13 +1,12 @@
 package com.kino.my_video_service.service;
 
 import com.kino.my_video_service.entities.UserEntity;
-import com.kino.my_video_service.exception.*;
+import com.kino.my_video_service.exception.user.*;
 import com.kino.my_video_service.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class UserService {

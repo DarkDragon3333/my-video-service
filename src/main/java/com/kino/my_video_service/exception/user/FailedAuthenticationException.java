@@ -1,4 +1,4 @@
-package com.kino.my_video_service.exception;
+package com.kino.my_video_service.exception.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

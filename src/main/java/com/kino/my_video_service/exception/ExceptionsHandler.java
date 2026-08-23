@@ -1,6 +1,7 @@
 package com.kino.my_video_service.exception;
 
 import com.kino.my_video_service.dto.ExceptionHandlerResponse;
+import com.kino.my_video_service.exception.user.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
