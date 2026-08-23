@@ -36,7 +36,7 @@ public class MovieService {
         return movieRepository.save(movieEntity);
     }
 
-    public MovieEntity getMovie(Long id){
+    public MovieEntity findMovieById(Long id){
         return movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
     }
 

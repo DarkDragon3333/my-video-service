@@ -41,7 +41,7 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public MovieResponse getMovie(@PathVariable Long id){
-        MovieEntity movieEntity = movieService.getMovie(id);
+        MovieEntity movieEntity = movieService.findMovieById(id);
 
         return new MovieResponse(
                 movieEntity.getId(), movieEntity.getTitle(), movieEntity.getRequiredPlan(),
