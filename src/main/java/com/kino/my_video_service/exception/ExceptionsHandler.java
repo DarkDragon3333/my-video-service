@@ -1,6 +1,7 @@
 package com.kino.my_video_service.exception;
 
 import com.kino.my_video_service.dto.ExceptionHandlerResponse;
+import com.kino.my_video_service.exception.movie.SameTitleException;
 import com.kino.my_video_service.exception.user.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -108,6 +109,20 @@ public class ExceptionsHandler {
                 ZonedDateTime.now(),
                 HttpStatus.CONFLICT.value(),
                 "Data conflict",
+                httpServletRequest.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(SameTitleException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionHandlerResponse sameTitle(
+            SameTitleException sameTitleException,
+            HttpServletRequest httpServletRequest
+    ){
+        return new ExceptionHandlerResponse(
+                ZonedDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                sameTitleException.getMessage(),
                 httpServletRequest.getRequestURI()
         );
     }
