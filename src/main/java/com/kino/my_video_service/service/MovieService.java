@@ -3,6 +3,7 @@ package com.kino.my_video_service.service;
 import com.kino.my_video_service.entities.MovieEntity;
 import com.kino.my_video_service.enums.Genre;
 import com.kino.my_video_service.enums.SubscriptionPlan;
+import com.kino.my_video_service.exception.movie.MovieNotFoundException;
 import com.kino.my_video_service.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +33,9 @@ public class MovieService {
         movieEntity.setDuration(duration);
 
         return movieRepository.save(movieEntity);
+    }
+
+    public MovieEntity getMovie(Long id){
+        return movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
     }
 }

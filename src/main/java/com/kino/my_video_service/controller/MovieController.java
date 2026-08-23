@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+
 @RestController
 @RequestMapping("/movies")
 public class MovieController {
@@ -32,7 +34,22 @@ public class MovieController {
         return new MovieResponse(
                 movieEntity.getId(), movieEntity.getTitle(), movieEntity.getRequiredPlan(),
                 movieEntity.getGenre(), movieEntity.getDescription(), movieEntity.getReleaseDate(),
-                Math.toIntExact(movieEntity.getDuration().toMinutes()), movieEntity.getRating()
+                durationToMinutes(movieEntity.getDuration()), movieEntity.getRating()
         );
+    }
+
+    @GetMapping("/{id}")
+    public MovieResponse getMovie(@PathVariable Long id){
+        MovieEntity movieEntity = movieService.getMovie(id);
+
+        return new MovieResponse(
+                movieEntity.getId(), movieEntity.getTitle(), movieEntity.getRequiredPlan(),
+                movieEntity.getGenre(), movieEntity.getDescription(), movieEntity.getReleaseDate(),
+                durationToMinutes(movieEntity.getDuration()), movieEntity.getRating()
+        );
+    }
+
+    private Integer durationToMinutes(Duration duration){
+        return Math.toIntExact(duration.toMinutes());
     }
 }
