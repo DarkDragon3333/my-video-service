@@ -50,7 +50,7 @@ public class UserController {
         ).toList();
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/displayName")
     public UserResponse patchDisplayName(@PathVariable Long id,@RequestBody @Valid ChangeDisplayNameRequest request){
         UserEntity userEntity = userService.patchDisplayName(id, request.getDisplayName());
         return new UserResponse(userEntity.getId(), userEntity.getLogin(), userEntity.getDisplayName());
