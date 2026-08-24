@@ -2,6 +2,7 @@ package com.kino.my_video_service.exception;
 
 import com.kino.my_video_service.dto.ExceptionHandlerResponse;
 import com.kino.my_video_service.exception.movie.MovieNotFoundException;
+import com.kino.my_video_service.exception.movie.SameMovieInformationException;
 import com.kino.my_video_service.exception.movie.SameTitleException;
 import com.kino.my_video_service.exception.user.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -138,6 +139,20 @@ public class ExceptionsHandler {
                 ZonedDateTime.now(),
                 HttpStatus.NOT_FOUND.value(),
                 movieNotFoundException.getMessage(),
+                httpServletRequest.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(SameMovieInformationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionHandlerResponse sameInformation(
+            HttpServletRequest httpServletRequest,
+            SameMovieInformationException sameMovieInformationException
+    ){
+        return new ExceptionHandlerResponse(
+                ZonedDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                sameMovieInformationException.getMessage(),
                 httpServletRequest.getRequestURI()
         );
     }
