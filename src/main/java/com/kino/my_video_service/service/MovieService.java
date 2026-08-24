@@ -4,6 +4,7 @@ import com.kino.my_video_service.entities.MovieEntity;
 import com.kino.my_video_service.enums.Genre;
 import com.kino.my_video_service.enums.SubscriptionPlan;
 import com.kino.my_video_service.exception.movie.MovieNotFoundException;
+import com.kino.my_video_service.exception.movie.SameMovieInformationException;
 import com.kino.my_video_service.exception.movie.SameTitleException;
 import com.kino.my_video_service.repository.MovieRepository;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,19 @@ public class MovieService {
 
         patchMovieEntity.setTitle(newTitle);
         return movieRepository.save(patchMovieEntity);
+    }
+
+    public MovieEntity patchDescription(Long id, String newDescription){
+        MovieEntity patchMovieEntity = findMovieById(id);
+
+        if (newDescription.equals(patchMovieEntity.getDescription()))
+            throw new SameMovieInformationException(
+                    id, "description",
+                    patchMovieEntity.getDescription(), newDescription
+            );
+
+        patchMovieEntity.setDescription(newDescription);
+        return movieRepository.save(patchMovieEntity);
+
     }
 }

@@ -1,5 +1,6 @@
 package com.kino.my_video_service.controller;
 
+import com.kino.my_video_service.dto.movie.ChangeDescriptionRequest;
 import com.kino.my_video_service.dto.movie.ChangeTitleRequest;
 import com.kino.my_video_service.dto.movie.CreateMovieRequest;
 import com.kino.my_video_service.dto.movie.MovieResponse;
@@ -68,6 +69,17 @@ public class MovieController {
     @PatchMapping("/{id}")
     public MovieResponse patchTitle(@PathVariable Long id, @RequestBody @Valid ChangeTitleRequest changeTitleRequest){
         MovieEntity movieEntity = movieService.patchTitle(id, changeTitleRequest.getTitle());
+
+        return new MovieResponse(
+                movieEntity.getId(), movieEntity.getTitle(), movieEntity.getRequiredPlan(),
+                movieEntity.getGenre(), movieEntity.getDescription(), movieEntity.getReleaseDate(),
+                durationToMinutes(movieEntity.getDuration()), movieEntity.getRating()
+        );
+    }
+
+    @PatchMapping("/description/{id}")
+    public MovieResponse patchDescription(@PathVariable Long id, @RequestBody @Valid ChangeDescriptionRequest description){
+        MovieEntity movieEntity = movieService.patchDescription(id, description.getDescription());
 
         return new MovieResponse(
                 movieEntity.getId(), movieEntity.getTitle(), movieEntity.getRequiredPlan(),
