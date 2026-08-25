@@ -66,7 +66,7 @@ public class MovieController {
         ).toList();
     }
 
-    @PatchMapping("/title/{id}")
+    @PatchMapping("/{id}/title")
     public MovieResponse patchTitle(@PathVariable Long id, @RequestBody @Valid ChangeTitleRequest changeTitleRequest){
         MovieEntity movieEntity = movieService.patchTitle(id, changeTitleRequest.getTitle());
 
@@ -77,7 +77,7 @@ public class MovieController {
         );
     }
 
-    @PatchMapping("/description/{id}")
+    @PatchMapping("/{id}/description")
     public MovieResponse patchDescription(@PathVariable Long id, @RequestBody @Valid ChangeDescriptionRequest description){
         MovieEntity movieEntity = movieService.patchDescription(id, description.getDescription());
 
