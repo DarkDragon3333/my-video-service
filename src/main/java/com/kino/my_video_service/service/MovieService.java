@@ -65,6 +65,42 @@ public class MovieService {
 
     }
 
+    public MovieEntity patchRequiredPlan(Long id, SubscriptionPlan requiredPlan){
+        return patchData(
+                id,
+                requiredPlan,
+                MovieEntity::getRequiredPlan,
+                MovieEntity::setRequiredPlan
+        );
+    }
+
+    public MovieEntity patchGenre(Long id, Genre genre){
+        return patchData(
+                id,
+                genre,
+                MovieEntity::getGenre,
+                MovieEntity::setGenre
+        );
+    }
+
+    public MovieEntity patchReleaseDate(Long id, LocalDate releaseDate){
+        return patchData(
+                id,
+                releaseDate,
+                MovieEntity::getReleaseDate,
+                MovieEntity::setReleaseDate
+        );
+    }
+
+    public MovieEntity patchDuration(Long id, Integer duration){
+        Duration durationMinutes = Duration.ofMinutes(duration);
+        return patchData(
+                id,
+                durationMinutes,
+                MovieEntity::getDuration,
+                MovieEntity::setDuration
+        );
+    }
 
     private <T> MovieEntity patchData(
             Long id,

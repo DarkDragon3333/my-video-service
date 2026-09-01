@@ -1,9 +1,6 @@
 package com.kino.my_video_service.controller;
 
-import com.kino.my_video_service.dto.movie.ChangeDescriptionRequest;
-import com.kino.my_video_service.dto.movie.ChangeTitleRequest;
-import com.kino.my_video_service.dto.movie.CreateMovieRequest;
-import com.kino.my_video_service.dto.movie.MovieResponse;
+import com.kino.my_video_service.dto.movie.*;
 import com.kino.my_video_service.entities.MovieEntity;
 import com.kino.my_video_service.service.MovieService;
 import jakarta.validation.Valid;
@@ -80,6 +77,50 @@ public class MovieController {
     @PatchMapping("/{id}/description")
     public MovieResponse patchDescription(@PathVariable Long id, @RequestBody @Valid ChangeDescriptionRequest description){
         MovieEntity movieEntity = movieService.patchDescription(id, description.getDescription());
+
+        return new MovieResponse(
+                movieEntity.getId(), movieEntity.getTitle(), movieEntity.getRequiredPlan(),
+                movieEntity.getGenre(), movieEntity.getDescription(), movieEntity.getReleaseDate(),
+                durationToMinutes(movieEntity.getDuration()), movieEntity.getRating()
+        );
+    }
+
+    @PatchMapping("/{id}/required-plan")
+    public MovieResponse patchRequiredPlan(@PathVariable Long id, @RequestBody @Valid ChangeRequiredPlanRequest requiredPlanRequest){
+        MovieEntity movieEntity = movieService.patchRequiredPlan(id, requiredPlanRequest.getRequiredPlan());
+
+        return new MovieResponse(
+                movieEntity.getId(), movieEntity.getTitle(), movieEntity.getRequiredPlan(),
+                movieEntity.getGenre(), movieEntity.getDescription(), movieEntity.getReleaseDate(),
+                durationToMinutes(movieEntity.getDuration()), movieEntity.getRating()
+        );
+    }
+
+    @PatchMapping("/{id}/genre")
+    public MovieResponse patchGenre(@PathVariable Long id, @RequestBody @Valid ChangeGenreRequest genreRequest){
+        MovieEntity movieEntity = movieService.patchGenre(id, genreRequest.getGenre());
+
+        return new MovieResponse(
+                movieEntity.getId(), movieEntity.getTitle(), movieEntity.getRequiredPlan(),
+                movieEntity.getGenre(), movieEntity.getDescription(), movieEntity.getReleaseDate(),
+                durationToMinutes(movieEntity.getDuration()), movieEntity.getRating()
+        );
+    }
+
+    @PatchMapping("/{id}/release-date")
+    public MovieResponse patchReleaseDate(@PathVariable Long id, @RequestBody @Valid ChangeReleaseDateRequest releaseDateRequest){
+        MovieEntity movieEntity = movieService.patchReleaseDate(id, releaseDateRequest.getReleaseDate());
+
+        return new MovieResponse(
+                movieEntity.getId(), movieEntity.getTitle(), movieEntity.getRequiredPlan(),
+                movieEntity.getGenre(), movieEntity.getDescription(), movieEntity.getReleaseDate(),
+                durationToMinutes(movieEntity.getDuration()), movieEntity.getRating()
+        );
+    }
+
+    @PatchMapping("/{id}/duration")
+    public MovieResponse patchDuration(@PathVariable Long id, @RequestBody @Valid ChangeDurationRequest changeDurationRequest){
+        MovieEntity movieEntity = movieService.patchDuration(id, changeDurationRequest.getDurationMinutes());
 
         return new MovieResponse(
                 movieEntity.getId(), movieEntity.getTitle(), movieEntity.getRequiredPlan(),
