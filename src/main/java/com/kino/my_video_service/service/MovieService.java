@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 @Service
 public class MovieService {
@@ -45,23 +47,37 @@ public class MovieService {
     }
 
     public MovieEntity patchTitle(Long id, String newTitle){
-        MovieEntity patchMovieEntity = findMovieById(id);
-
-        if (newTitle.equals(patchMovieEntity.getTitle()))
-            return patchMovieEntity;
-
-        patchMovieEntity.setTitle(newTitle);
-        return movieRepository.save(patchMovieEntity);
+        return patchData(
+                id,
+                newTitle,
+                MovieEntity::getTitle,
+                MovieEntity::setTitle
+        );
     }
 
     public MovieEntity patchDescription(Long id, String newDescription){
+        return patchData(
+                id,
+                newDescription,
+                MovieEntity::getDescription,
+                MovieEntity::setDescription
+        );
+
+    }
+
+
+    private <T> MovieEntity patchData(
+            Long id,
+            T newValue,
+            Function<MovieEntity, T> getter,
+            BiConsumer<MovieEntity, T> setter
+    ){
         MovieEntity patchMovieEntity = findMovieById(id);
 
-        if (newDescription.equals(patchMovieEntity.getDescription()))
+        if (newValue.equals(getter.apply(patchMovieEntity)))
             return patchMovieEntity;
 
-        patchMovieEntity.setDescription(newDescription);
+        setter.accept(patchMovieEntity, newValue);
         return movieRepository.save(patchMovieEntity);
-
     }
 }
