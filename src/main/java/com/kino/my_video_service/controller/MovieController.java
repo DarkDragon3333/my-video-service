@@ -129,6 +129,12 @@ public class MovieController {
         );
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMovie(@PathVariable Long id){
+        movieService.deleteMovie(id);
+    }
+
     private Integer durationToMinutes(Duration duration){
         return Math.toIntExact(duration.toMinutes());
     }

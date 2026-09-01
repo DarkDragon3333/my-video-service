@@ -116,4 +116,8 @@ public class MovieService {
         setter.accept(patchMovieEntity, newValue);
         return movieRepository.save(patchMovieEntity);
     }
+
+    public void deleteMovie(Long id){
+        movieRepository.deleteById(id);
+    }
 }
