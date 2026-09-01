@@ -66,4 +66,76 @@ public class MovieServiceTest {
         when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
         assertEquals(testMovieEntity, movieService.findMovieById(id));
     }
+
+    @Test
+    public void patchTitle_SameDataFromClient(){
+        Long id = 1L;
+        String testNewTitle = "newTitle";
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setTitle(testNewTitle);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        MovieEntity movieEntityFromMethod = movieService.patchTitle(id, testNewTitle);
+
+        verify(movieRepository, never()).save(any());
+        assertEquals(testMovieEntity, movieEntityFromMethod);
+        assertEquals(testMovieEntity.getTitle(), movieEntityFromMethod.getTitle());
+    }
+
+    @Test
+    public void patchTitle_SuccessPatch(){
+        Long id = 1L;
+        String newTitle1 = "newTitle1";
+        String newTitle2 = "newTitle2";
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setTitle(newTitle1);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        movieService.patchTitle(id, newTitle2);
+
+        ArgumentCaptor<MovieEntity> captor = ArgumentCaptor.forClass(MovieEntity.class);
+        verify(movieRepository, times(1)).save(captor.capture());
+
+        MovieEntity movieEntityFromCaptor = captor.getValue();
+        assertEquals(testMovieEntity, movieEntityFromCaptor);
+        assertEquals(newTitle2, movieEntityFromCaptor.getTitle());
+    }
+
+    @Test
+    public void patchDescription_SameDataFromClient(){
+        Long id = 1L;
+        String testNewDescription = "newDescription";
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setDescription(testNewDescription);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        MovieEntity movieEntityFromMethod = movieService.patchDescription(id, testNewDescription);
+
+        verify(movieRepository, never()).save(any());
+        assertEquals(testMovieEntity, movieEntityFromMethod);
+        assertEquals(testMovieEntity.getDescription(), movieEntityFromMethod.getDescription());
+    }
+
+    @Test
+    public void patchDescription_SuccessPatch(){
+        Long id = 1L;
+        String newDescription1 = "newDescription1";
+        String newDescription2 = "newDescription2";
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setDescription(newDescription1);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        movieService.patchDescription(id, newDescription2);
+
+        ArgumentCaptor<MovieEntity> captor = ArgumentCaptor.forClass(MovieEntity.class);
+        verify(movieRepository, times(1)).save(captor.capture());
+
+        MovieEntity movieEntityFromCaptor = captor.getValue();
+        assertEquals(testMovieEntity, movieEntityFromCaptor);
+        assertEquals(newDescription2, movieEntityFromCaptor.getDescription());
+    }
 }
