@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -137,5 +138,154 @@ public class MovieServiceTest {
         MovieEntity movieEntityFromCaptor = captor.getValue();
         assertEquals(testMovieEntity, movieEntityFromCaptor);
         assertEquals(newDescription2, movieEntityFromCaptor.getDescription());
+    }
+
+    @Test
+    public void patchRequiredPlan_SameDataFromClient(){
+        Long id = 1L;
+        SubscriptionPlan testNewRequiredPlan = SubscriptionPlan.BASE;
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setRequiredPlan(testNewRequiredPlan);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        MovieEntity movieEntityFromMethod = movieService.patchRequiredPlan(id, testNewRequiredPlan);
+
+        verify(movieRepository, never()).save(any());
+        assertEquals(testMovieEntity, movieEntityFromMethod);
+        assertEquals(testMovieEntity.getRequiredPlan(), movieEntityFromMethod.getRequiredPlan());
+    }
+
+    @Test
+    public void patchRequiredPlan_SuccessPatch(){
+        Long id = 1L;
+        SubscriptionPlan newRequiredPlan1 = SubscriptionPlan.BASE;
+        SubscriptionPlan newRequiredPlan2 = SubscriptionPlan.PREMIUM;
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setRequiredPlan(newRequiredPlan1);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        movieService.patchRequiredPlan(id, newRequiredPlan2);
+
+        ArgumentCaptor<MovieEntity> captor = ArgumentCaptor.forClass(MovieEntity.class);
+        verify(movieRepository, times(1)).save(captor.capture());
+
+        MovieEntity movieEntityFromCaptor = captor.getValue();
+        assertEquals(testMovieEntity, movieEntityFromCaptor);
+        assertEquals(newRequiredPlan2, movieEntityFromCaptor.getRequiredPlan());
+    }
+
+    @Test
+    public void patchGenre_SameDataFromClient(){
+        Long id = 1L;
+        Genre testNewGenre = Genre.ACTION;
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setGenre(testNewGenre);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        MovieEntity movieEntityFromMethod = movieService.patchGenre(id, testNewGenre);
+
+        verify(movieRepository, never()).save(any());
+        assertEquals(testMovieEntity, movieEntityFromMethod);
+        assertEquals(testMovieEntity.getGenre(), movieEntityFromMethod.getGenre());
+    }
+
+    @Test
+    public void patchGenre_SuccessPatch(){
+        Long id = 1L;
+        Genre newGenre1 = Genre.ACTION;
+        Genre newGenre2 = Genre.COMEDY;
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setGenre(newGenre1);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        movieService.patchGenre(id, newGenre2);
+
+        ArgumentCaptor<MovieEntity> captor = ArgumentCaptor.forClass(MovieEntity.class);
+        verify(movieRepository, times(1)).save(captor.capture());
+
+        MovieEntity movieEntityFromCaptor = captor.getValue();
+        assertEquals(testMovieEntity, movieEntityFromCaptor);
+        assertEquals(newGenre2, movieEntityFromCaptor.getGenre());
+    }
+
+    @Test
+    public void patchReleaseDate_SameDataFromClient(){
+        Long id = 1L;
+        LocalDate testNewReleaseDate = LocalDate.of(1900, 10, 10);
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setReleaseDate(testNewReleaseDate);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        MovieEntity movieEntityFromMethod = movieService.patchReleaseDate(id, testNewReleaseDate);
+
+        verify(movieRepository, never()).save(any());
+        assertEquals(testMovieEntity, movieEntityFromMethod);
+        assertEquals(testMovieEntity.getReleaseDate(), movieEntityFromMethod.getReleaseDate());
+    }
+
+    @Test
+    public void patchReleaseDate_SuccessPatch(){
+        Long id = 1L;
+        LocalDate newReleaseDate1 = LocalDate.of(1900, 10, 10);
+        LocalDate newReleaseDate2 = LocalDate.of(2000, 1, 20);
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setReleaseDate(newReleaseDate1);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        movieService.patchReleaseDate(id, newReleaseDate2);
+
+        ArgumentCaptor<MovieEntity> captor = ArgumentCaptor.forClass(MovieEntity.class);
+        verify(movieRepository, times(1)).save(captor.capture());
+
+        MovieEntity movieEntityFromCaptor = captor.getValue();
+        assertEquals(testMovieEntity, movieEntityFromCaptor);
+        assertEquals(newReleaseDate2, movieEntityFromCaptor.getReleaseDate());
+    }
+
+    @Test
+    public void patchDuration_SameDataFromClient(){
+        Long id = 1L;
+        int testNewDurationMinutes = 120;
+        Duration testDuration = Duration.ofMinutes(testNewDurationMinutes);
+
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setDuration(testDuration);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        MovieEntity movieEntityFromMethod = movieService.patchDuration(id, testNewDurationMinutes);
+
+        verify(movieRepository, never()).save(any());
+        assertEquals(testMovieEntity, movieEntityFromMethod);
+        assertEquals(testMovieEntity.getDuration(), movieEntityFromMethod.getDuration());
+    }
+
+    @Test
+    public void patchDuration_SuccessPatch(){
+        Long id = 1L;
+        int newTestDurationMinutes1 = 120;
+        int newTestDurationMinutes2 = 235;
+        Duration testDuration1 = Duration.ofMinutes(newTestDurationMinutes1);
+        Duration testDuration2 = Duration.ofMinutes(newTestDurationMinutes2);
+
+        MovieEntity testMovieEntity = new MovieEntity();
+        testMovieEntity.setDuration(testDuration1);
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(testMovieEntity));
+
+        movieService.patchDuration(id, newTestDurationMinutes2);
+
+        ArgumentCaptor<MovieEntity> captor = ArgumentCaptor.forClass(MovieEntity.class);
+        verify(movieRepository, times(1)).save(captor.capture());
+
+        MovieEntity movieEntityFromCaptor = captor.getValue();
+        assertEquals(testMovieEntity, movieEntityFromCaptor);
+        assertEquals(testDuration2, movieEntityFromCaptor.getDuration());
     }
 }
