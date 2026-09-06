@@ -23,11 +23,11 @@ public class CostPlanController {
     public ResponseEntity<CostPlanResponse> upsertCostPlan(@PathVariable SubscriptionPlan plan, @RequestBody @Valid CostPlanRequest costPlanRequest){
         PlanUpsertResult result = costPlanService.upsertCostPlan(plan, costPlanRequest.getCost());
         return result.existed() ?
-                createResponseEntity(HttpStatus.OK, result) :
-                createResponseEntity(HttpStatus.CREATED, result);
+                toResponseEntity(HttpStatus.OK, result) :
+                toResponseEntity(HttpStatus.CREATED, result);
     }
 
-    private ResponseEntity<CostPlanResponse> createResponseEntity(HttpStatus httpStatus, PlanUpsertResult result){
+    private ResponseEntity<CostPlanResponse> toResponseEntity(HttpStatus httpStatus, PlanUpsertResult result){
         return ResponseEntity.status(httpStatus).body(
                 new CostPlanResponse(result.costPlan().getPlan() , result.costPlan().getCost() )
         );

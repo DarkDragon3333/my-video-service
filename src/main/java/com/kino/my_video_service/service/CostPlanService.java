@@ -19,11 +19,11 @@ public class CostPlanService {
 
     public PlanUpsertResult upsertCostPlan(SubscriptionPlan plan, BigDecimal cost){
         boolean exist = costPlanRepository.existsById(plan);
-        CostPlanEntity newCostPlan = new CostPlanEntity();
-        newCostPlan.setPlan(plan);
-        newCostPlan.setCost(cost);
+        CostPlanEntity costPlan = new CostPlanEntity();
+        costPlan.setPlan(plan);
+        costPlan.setCost(cost);
 
-        CostPlanEntity savedPlan = costPlanRepository.save(newCostPlan);
+        CostPlanEntity savedPlan = costPlanRepository.save(costPlan);
         return new PlanUpsertResult(savedPlan, exist);
     }
 }

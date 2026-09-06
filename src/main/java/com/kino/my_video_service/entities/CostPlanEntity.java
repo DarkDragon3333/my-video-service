@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "cost_plans")
 public class CostPlanEntity {
-
     @Id
     @Enumerated(EnumType.STRING)
     private SubscriptionPlan plan;
