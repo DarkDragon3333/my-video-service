@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "subscriptions")
@@ -31,9 +31,9 @@ public class SubscriptionEntity {
     private BigDecimal cost;
 
     @Column(nullable = false)
-    private LocalDateTime dateBegin;
+    private Instant dateBegin;
 
     @Column(nullable = false)
-    private LocalDateTime dateEnd;
+    private Instant dateEnd;
 
 }
