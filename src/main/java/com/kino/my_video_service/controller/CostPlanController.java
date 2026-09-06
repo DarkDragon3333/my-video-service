@@ -1,0 +1,35 @@
+package com.kino.my_video_service.controller;
+
+import com.kino.my_video_service.dto.cost_plan.CostPlanRequest;
+import com.kino.my_video_service.dto.cost_plan.CostPlanResponse;
+import com.kino.my_video_service.dto.cost_plan.PlanUpsertResult;
+import com.kino.my_video_service.enums.SubscriptionPlan;
+import com.kino.my_video_service.service.CostPlanService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/cost-plans")
+public class CostPlanController {
+    private final CostPlanService costPlanService;
+
+    public CostPlanController(CostPlanService costPlanService) {
+        this.costPlanService = costPlanService;
+    }
+
+    @PutMapping("/{plan}")
+    public ResponseEntity<CostPlanResponse> upsertCostPlan(@PathVariable SubscriptionPlan plan, @RequestBody @Valid CostPlanRequest costPlanRequest){
+        PlanUpsertResult result = costPlanService.upsertCostPlan(plan, costPlanRequest.getCost());
+        return result.existed() ?
+                createResponseEntity(HttpStatus.OK, result) :
+                createResponseEntity(HttpStatus.CREATED, result);
+    }
+
+    private ResponseEntity<CostPlanResponse> createResponseEntity(HttpStatus httpStatus, PlanUpsertResult result){
+        return ResponseEntity.status(httpStatus).body(
+                new CostPlanResponse(result.costPlan().getPlan() , result.costPlan().getCost() )
+        );
+    }
+}
