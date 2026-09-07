@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.List;
 
 @RestController
 @RequestMapping("/cost-plans")
@@ -37,14 +37,14 @@ public class CostPlanController {
         );
     }
 
+    @GetMapping
+    public List<CostPlanResponse> findAll(){
+        List<CostPlanEntity> costPlanList = costPlanService.findAll();
+        return costPlanList.stream().map(
+                this::toResponse
+        ).toList();
 
-
-
-
-
-
-
-
+    }
 
     private CostPlanResponse toResponse(CostPlanEntity costPlanEntity) {
         return new CostPlanResponse(costPlanEntity.getPlan(), costPlanEntity.getCost());

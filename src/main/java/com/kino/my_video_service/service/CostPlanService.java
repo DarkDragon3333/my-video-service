@@ -7,6 +7,7 @@ import com.kino.my_video_service.repository.CostPlanRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class CostPlanService {
@@ -25,5 +26,9 @@ public class CostPlanService {
 
         CostPlanEntity savedPlan = costPlanRepository.save(costPlan);
         return new PlanUpsertResult(savedPlan, exist);
+    }
+
+    public List<CostPlanEntity> findAll() {
+        return costPlanRepository.findAll();
     }
 }
