@@ -3,12 +3,16 @@ package com.kino.my_video_service.controller;
 import com.kino.my_video_service.dto.cost_plan.CostPlanRequest;
 import com.kino.my_video_service.dto.cost_plan.CostPlanResponse;
 import com.kino.my_video_service.dto.cost_plan.PlanUpsertResult;
+import com.kino.my_video_service.entities.CostPlanEntity;
 import com.kino.my_video_service.enums.SubscriptionPlan;
 import com.kino.my_video_service.service.CostPlanService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
+
+
 
 @RestController
 @RequestMapping("/cost-plans")
@@ -29,7 +33,20 @@ public class CostPlanController {
 
     private ResponseEntity<CostPlanResponse> toResponseEntity(HttpStatus httpStatus, PlanUpsertResult result){
         return ResponseEntity.status(httpStatus).body(
-                new CostPlanResponse(result.costPlan().getPlan() , result.costPlan().getCost() )
+                toResponse(result.costPlan())
         );
+    }
+
+
+
+
+
+
+
+
+
+
+    private CostPlanResponse toResponse(CostPlanEntity costPlanEntity) {
+        return new CostPlanResponse(costPlanEntity.getPlan(), costPlanEntity.getCost());
     }
 }
