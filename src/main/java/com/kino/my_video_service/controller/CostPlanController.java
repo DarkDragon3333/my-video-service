@@ -9,7 +9,6 @@ import com.kino.my_video_service.service.CostPlanService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +43,12 @@ public class CostPlanController {
                 this::toResponse
         ).toList();
 
+    }
+
+    @DeleteMapping("/{plan}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCostPlan(@PathVariable SubscriptionPlan plan){
+        costPlanService.deletePlan(plan);
     }
 
     private CostPlanResponse toResponse(CostPlanEntity costPlanEntity) {

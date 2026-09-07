@@ -31,4 +31,8 @@ public class CostPlanService {
     public List<CostPlanEntity> findAll() {
         return costPlanRepository.findAll();
     }
+
+    public void deletePlan(SubscriptionPlan plan){
+        costPlanRepository.deleteById(plan);
+    }
 }
