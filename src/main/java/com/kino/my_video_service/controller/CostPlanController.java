@@ -23,8 +23,11 @@ public class CostPlanController {
     }
 
     @PutMapping("/{plan}")
-    public ResponseEntity<CostPlanResponse> upsertCostPlan(@PathVariable SubscriptionPlan plan, @RequestBody @Valid CostPlanRequest costPlanRequest){
-        PlanUpsertResult result = costPlanService.upsertCostPlan(plan, costPlanRequest.getCost());
+    public ResponseEntity<CostPlanResponse> upsertCostPlan(
+            @PathVariable SubscriptionPlan plan,
+            @RequestBody @Valid CostPlanRequest costPlanRequest
+    ){
+        PlanUpsertResult result = costPlanService.upsertCostPlan(plan, costPlanRequest.getCost(), costPlanRequest.getDurationDays());
         return result.existed() ?
                 toResponseEntity(HttpStatus.OK, result) :
                 toResponseEntity(HttpStatus.CREATED, result);
@@ -52,6 +55,10 @@ public class CostPlanController {
     }
 
     private CostPlanResponse toResponse(CostPlanEntity costPlanEntity) {
-        return new CostPlanResponse(costPlanEntity.getPlan(), costPlanEntity.getCost());
+        return new CostPlanResponse(costPlanEntity.getPlan(), costPlanEntity.getCost(), getDays(costPlanEntity));
+    }
+
+    private Integer getDays(CostPlanEntity costPlanEntity) {
+        return Math.toIntExact(costPlanEntity.getDuration().toDays());
     }
 }

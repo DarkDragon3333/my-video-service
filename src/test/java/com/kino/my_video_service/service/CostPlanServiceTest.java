@@ -29,6 +29,7 @@ public class CostPlanServiceTest {
         boolean testExist = true;
         SubscriptionPlan plan = SubscriptionPlan.BASE;
         BigDecimal cost = BigDecimal.valueOf(200);
+        Integer durationDays = 30;
 
         CostPlanEntity testCostPlan = new CostPlanEntity();
         testCostPlan.setPlan(plan);
@@ -37,7 +38,7 @@ public class CostPlanServiceTest {
         when(costPlanRepository.existsById(plan)).thenReturn(testExist);
         when(costPlanRepository.save(any())).thenReturn(testCostPlan);
 
-        PlanUpsertResult testResult = costPlanService.upsertCostPlan(plan, cost);
+        PlanUpsertResult testResult = costPlanService.upsertCostPlan(plan, cost, durationDays);
 
         ArgumentCaptor<CostPlanEntity> captor = ArgumentCaptor.forClass(CostPlanEntity.class);
         verify(costPlanRepository, times(1)).save(captor.capture());
@@ -47,6 +48,7 @@ public class CostPlanServiceTest {
         assertEquals(plan, captureEntity.getPlan());
         assertEquals(cost, captureEntity.getCost());
         assertEquals(testExist, testResult.existed());
+        assertEquals(durationDays, Math.toIntExact(captureEntity.getDuration().toDays()));
     }
 
 }

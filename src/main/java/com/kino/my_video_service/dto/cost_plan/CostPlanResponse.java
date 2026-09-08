@@ -11,4 +11,5 @@ import java.math.BigDecimal;
 public class CostPlanResponse {
     private SubscriptionPlan plan;
     private BigDecimal cost;
+    private Integer durationDays;
 }

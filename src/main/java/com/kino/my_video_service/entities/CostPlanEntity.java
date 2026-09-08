@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 
 @Getter
 @Setter
@@ -20,4 +21,7 @@ public class CostPlanEntity {
 
     @Column(nullable = false)
     private BigDecimal cost;
+
+    @Column(nullable = false)
+    private Duration duration;
 }
