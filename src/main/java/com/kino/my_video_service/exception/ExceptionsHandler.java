@@ -2,6 +2,8 @@ package com.kino.my_video_service.exception;
 
 import com.kino.my_video_service.dto.ExceptionHandlerResponse;
 import com.kino.my_video_service.exception.movie.MovieNotFoundException;
+import com.kino.my_video_service.exception.subscription.CostPlanNotFoundException;
+import com.kino.my_video_service.exception.subscription.SubscriptionAlreadyExistException;
 import com.kino.my_video_service.exception.user.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -123,6 +125,34 @@ public class ExceptionsHandler {
                 ZonedDateTime.now(),
                 HttpStatus.NOT_FOUND.value(),
                 movieNotFoundException.getMessage(),
+                httpServletRequest.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(CostPlanNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionHandlerResponse costPlanNotFound(
+            CostPlanNotFoundException exception,
+            HttpServletRequest httpServletRequest
+    ){
+        return new ExceptionHandlerResponse(
+                ZonedDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage(),
+                httpServletRequest.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(SubscriptionAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionHandlerResponse subscriptionAlreadyExist(
+            SubscriptionAlreadyExistException exception,
+            HttpServletRequest httpServletRequest
+    ){
+        return new ExceptionHandlerResponse(
+                ZonedDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                exception.getMessage(),
                 httpServletRequest.getRequestURI()
         );
     }
