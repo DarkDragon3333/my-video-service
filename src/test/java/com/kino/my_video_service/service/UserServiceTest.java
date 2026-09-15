@@ -10,8 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class UserServiceTest {
@@ -42,14 +41,17 @@ public class UserServiceTest {
         String displayName = "Max";
         String password = "123456789";
         String passwordHash = "hashed-password";
+        UserEntity testUser = new UserEntity();
 
         when(passwordEncoder.encode(password)).thenReturn(passwordHash);
-        userService.createUser(login, displayName, password);
+        when(userRepository.save(any())).thenReturn(testUser);
+        UserEntity savedUser = userService.createUser(login, displayName, password);
 
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepository, times(1)).save(captor.capture());
 
         UserEntity capturedUser = captor.getValue();
+        assertNotNull(savedUser);
         assertEquals(login, capturedUser.getLogin());
         assertEquals(displayName, capturedUser.getDisplayName());
         assertEquals(passwordHash, capturedUser.getPasswordHash());
