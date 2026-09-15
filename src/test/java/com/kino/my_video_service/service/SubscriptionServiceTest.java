@@ -73,17 +73,12 @@ public class SubscriptionServiceTest {
     @Test
     public void createSubscription_SubscriptionAlreadyExistException() {
         Long id = 1L;
-        UserEntity testUser = new UserEntity();
-
         SubscriptionPlan testPlan = SubscriptionPlan.BASE;
-        CostPlanEntity testCostPlan = new CostPlanEntity();
         BigDecimal testCost = BigDecimal.valueOf(100);
-
         Duration testDuration = Duration.ofDays(30);
 
-        testCostPlan.setCost(testCost);
-        testCostPlan.setPlan(testPlan);
-        testCostPlan.setDuration(testDuration);
+        UserEntity testUser = new UserEntity();
+        CostPlanEntity testCostPlan = createCostPlan(testCost, testPlan, testDuration);
 
         when(userService.findUserById(id)).thenReturn(testUser);
         when(costPlanRepository.findById(testPlan)).thenReturn(Optional.of(testCostPlan));
@@ -100,17 +95,12 @@ public class SubscriptionServiceTest {
     @Test
     public void createSubscription_SuccessOperation() {
         Long id = 1L;
-        UserEntity testUser = new UserEntity();
-
         SubscriptionPlan testPlan = SubscriptionPlan.BASE;
-        CostPlanEntity testCostPlan = new CostPlanEntity();
         BigDecimal testCost = BigDecimal.valueOf(100);
-
         Duration testDuration = Duration.ofDays(30);
 
-        testCostPlan.setCost(testCost);
-        testCostPlan.setPlan(testPlan);
-        testCostPlan.setDuration(testDuration);
+        UserEntity testUser = new UserEntity();
+        CostPlanEntity testCostPlan = createCostPlan(testCost, testPlan, testDuration);
 
         when(userService.findUserById(id)).thenReturn(testUser);
         when(costPlanRepository.findById(testPlan)).thenReturn(Optional.of(testCostPlan));
@@ -127,4 +117,13 @@ public class SubscriptionServiceTest {
         assertEquals(testCost, captorSubscription.getCost());
         assertEquals(captorSubscription.getDateBegin(), captorSubscription.getDateEnd().minus(testDuration));
     }
+
+    private CostPlanEntity createCostPlan(BigDecimal testCost, SubscriptionPlan testPlan, Duration testDuration) {
+        CostPlanEntity costPlanEntity = new CostPlanEntity();
+        costPlanEntity.setCost(testCost);
+        costPlanEntity.setPlan(testPlan);
+        costPlanEntity.setDuration(testDuration);
+        return costPlanEntity;
+    }
+
 }
