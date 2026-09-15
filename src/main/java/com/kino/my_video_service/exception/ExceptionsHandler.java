@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -23,137 +24,97 @@ public class ExceptionsHandler {
     private static final Logger log = LoggerFactory.getLogger(ExceptionsHandler.class);
 
     @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionHandlerResponse userNotFound(
+    public ResponseEntity<ExceptionHandlerResponse> userNotFound(
             UserNotFoundException exception,
-            HttpServletRequest httpServletRequest)
-    {
-        return new ExceptionHandlerResponse(
-                ZonedDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                exception.getMessage(),
-                httpServletRequest.getRequestURI()
-        );
+            HttpServletRequest httpServletRequest
+    ){
+        return toResponse(HttpStatus.NOT_FOUND, exception.getMessage(), httpServletRequest.getRequestURI());
     }
 
     @ExceptionHandler(FailedAuthenticationException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ExceptionHandlerResponse failedAuthentication(
+    public ResponseEntity<ExceptionHandlerResponse> failedAuthentication(
             FailedAuthenticationException exception,
-            HttpServletRequest httpServletRequest)
-    {
-        return new ExceptionHandlerResponse(
-                ZonedDateTime.now(),
-                HttpStatus.UNAUTHORIZED.value(),
-                exception.getMessage(),
-                httpServletRequest.getRequestURI()
-        );
+            HttpServletRequest httpServletRequest
+    ){
+        return toResponse(HttpStatus.UNAUTHORIZED, exception.getMessage(), httpServletRequest.getRequestURI());
     }
 
     @ExceptionHandler(LoginAlreadyTakenException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ExceptionHandlerResponse loginAlreadyTaken(
+    public ResponseEntity<ExceptionHandlerResponse> loginAlreadyTaken(
             LoginAlreadyTakenException exception,
-            HttpServletRequest httpServletRequest)
-    {
-        return new ExceptionHandlerResponse(
-                ZonedDateTime.now(),
-                HttpStatus.CONFLICT.value(),
-                exception.getMessage(),
-                httpServletRequest.getRequestURI()
-        );
+            HttpServletRequest httpServletRequest
+    ){
+        return toResponse(HttpStatus.CONFLICT, exception.getMessage(), httpServletRequest.getRequestURI());
     }
 
     @ExceptionHandler(SameLoginException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionHandlerResponse sameLogin(
+    public ResponseEntity<ExceptionHandlerResponse> sameLogin(
             SameLoginException exception,
-            HttpServletRequest httpServletRequest)
-    {
-        return new ExceptionHandlerResponse(
-                ZonedDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                exception.getMessage(),
-                httpServletRequest.getRequestURI()
-        );
+            HttpServletRequest httpServletRequest
+    ){
+        return toResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), httpServletRequest.getRequestURI());
     }
 
     @ExceptionHandler(WrongPasswordException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ExceptionHandlerResponse wrongPassword(
+    public ResponseEntity<ExceptionHandlerResponse> wrongPassword(
             WrongPasswordException exception,
-            HttpServletRequest httpServletRequest)
-    {
-        return new ExceptionHandlerResponse(
-                ZonedDateTime.now(),
-                HttpStatus.FORBIDDEN.value(),
-                exception.getMessage(),
-                httpServletRequest.getRequestURI()
-        );
+            HttpServletRequest httpServletRequest
+    ){
+        return toResponse(HttpStatus.FORBIDDEN, exception.getMessage(), httpServletRequest.getRequestURI());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionHandlerResponse failedValidate(HttpServletRequest httpServletRequest){
-        return new ExceptionHandlerResponse(
-                ZonedDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                "Failed validation",
-                httpServletRequest.getRequestURI()
-        );
+    public ResponseEntity<ExceptionHandlerResponse> failedValidate(HttpServletRequest httpServletRequest){
+        return toResponse(HttpStatus.BAD_REQUEST, "Failed validation", httpServletRequest.getRequestURI());
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ExceptionHandlerResponse dataConflict(HttpServletRequest httpServletRequest){
-        log.warn("Data conflict: {}", httpServletRequest.getRequestURI());
-        return new ExceptionHandlerResponse(
-                ZonedDateTime.now(),
-                HttpStatus.CONFLICT.value(),
-                "Data conflict",
-                httpServletRequest.getRequestURI()
-        );
+    public ResponseEntity<ExceptionHandlerResponse> dataConflict(
+            DataIntegrityViolationException exception,
+            HttpServletRequest httpServletRequest
+    ){
+        log.warn("Data conflict: {}", exception.getMostSpecificCause().getMessage());
+        return toResponse(HttpStatus.CONFLICT, "Data conflict", httpServletRequest.getRequestURI());
     }
 
     @ExceptionHandler(MovieNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionHandlerResponse movieNotFound(
-            MovieNotFoundException movieNotFoundException,
+    public ResponseEntity<ExceptionHandlerResponse> movieNotFound(
+            MovieNotFoundException exception,
             HttpServletRequest httpServletRequest
     ){
-        return new ExceptionHandlerResponse(
-                ZonedDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                movieNotFoundException.getMessage(),
-                httpServletRequest.getRequestURI()
-        );
+        return toResponse(HttpStatus.NOT_FOUND, exception.getMessage(), httpServletRequest.getRequestURI());
     }
 
     @ExceptionHandler(CostPlanNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionHandlerResponse costPlanNotFound(
+    public ResponseEntity<ExceptionHandlerResponse> costPlanNotFound(
             CostPlanNotFoundException exception,
             HttpServletRequest httpServletRequest
     ){
-        return new ExceptionHandlerResponse(
-                ZonedDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                exception.getMessage(),
-                httpServletRequest.getRequestURI()
-        );
+        return toResponse(HttpStatus.NOT_FOUND, exception.getMessage(), httpServletRequest.getRequestURI());
     }
 
     @ExceptionHandler(SubscriptionAlreadyExistException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ExceptionHandlerResponse subscriptionAlreadyExist(
+    public ResponseEntity<ExceptionHandlerResponse> subscriptionAlreadyExist(
             SubscriptionAlreadyExistException exception,
             HttpServletRequest httpServletRequest
     ){
+        return toResponse(HttpStatus.CONFLICT, exception.getMessage(), httpServletRequest.getRequestURI());
+    }
+
+    private ResponseEntity<ExceptionHandlerResponse> toResponse(
+            HttpStatus httpStatus, String message, String requestURI
+    ){
+        return ResponseEntity.status(httpStatus).body(toExceptionHandlerResponse(httpStatus, message, requestURI));
+    }
+
+    private ExceptionHandlerResponse toExceptionHandlerResponse(
+            HttpStatus httpStatus, String message, String requestURI
+    ){
         return new ExceptionHandlerResponse(
                 ZonedDateTime.now(),
-                HttpStatus.CONFLICT.value(),
-                exception.getMessage(),
-                httpServletRequest.getRequestURI()
+                httpStatus.value(),
+                message,
+                requestURI
         );
     }
 
