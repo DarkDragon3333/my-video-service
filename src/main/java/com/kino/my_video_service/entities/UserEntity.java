@@ -24,4 +24,7 @@ public class UserEntity {
 
     @Column(nullable = false)
     private String passwordHash;
+
+    @Column(nullable = false)
+    private boolean isDeleted = false;
 }

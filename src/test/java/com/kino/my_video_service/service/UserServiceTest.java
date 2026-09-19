@@ -98,7 +98,7 @@ public class UserServiceTest {
     @Test
     public void findUserById_successSearch() {
         UserEntity testUser = new UserEntity();
-        when(userRepository.findById(10L)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByIdAndIsDeletedFalse(10L)).thenReturn(Optional.of(testUser));
         assertEquals(
                 testUser,
                 userService.findUserById(10L)
@@ -110,7 +110,7 @@ public class UserServiceTest {
         UserEntity testUser = new UserEntity();
         String testLogin = "testLogin";
         testUser.setLogin(testLogin);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByIdAndIsDeletedFalse(1L)).thenReturn(Optional.of(testUser));
         assertThrows(
                 SameLoginException.class,
                 () -> userService.patchLogin(1L, testLogin)
@@ -124,7 +124,7 @@ public class UserServiceTest {
         String userLogin = "userLogin";
         String testNewLogin = "newLogin";
         testUser.setLogin(userLogin);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByIdAndIsDeletedFalse(1L)).thenReturn(Optional.of(testUser));
         when(userRepository.existsByLogin(testNewLogin)).thenReturn(true);
         assertThrows(
                 LoginAlreadyTakenException.class,
@@ -140,7 +140,7 @@ public class UserServiceTest {
         String testNewLogin = "newLogin";
         testUser.setLogin(userLogin);
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByIdAndIsDeletedFalse(1L)).thenReturn(Optional.of(testUser));
         UserEntity testPatchUser = userService.patchLogin(1L, testNewLogin);
         verify(userRepository, times(1)).save(testUser);
 
@@ -151,7 +151,7 @@ public class UserServiceTest {
     @Test
     public void patchPassword_WrongPasswordException() {
         UserEntity testUser = new UserEntity();
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByIdAndIsDeletedFalse(1L)).thenReturn(Optional.of(testUser));
         assertThrows(
                 WrongPasswordException.class,
                 () -> userService.patchPassword(1L, "oldPass", "newPass")
@@ -166,7 +166,7 @@ public class UserServiceTest {
         String newPassword = "newPassword";
         String hashed = "hashed-password";
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByIdAndIsDeletedFalse(1L)).thenReturn(Optional.of(testUser));
         when(passwordEncoder.matches(oldPassword, testUser.getPasswordHash())).thenReturn(true);
         when(passwordEncoder.encode(newPassword)).thenReturn(hashed);
 
@@ -177,5 +177,43 @@ public class UserServiceTest {
 
         UserEntity captorUser = captor.getValue();
         assertEquals(hashed, captorUser.getPasswordHash());
+    }
+
+    @Test
+    public void deleteUser_emptyResult() {
+        Long id = 0L;
+        when(userRepository.findByIdAndIsDeletedFalse(id)).thenReturn(Optional.empty());
+        userService.deleteUser(id);
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    public void deleteUser_successOperation() {
+        Long id = 0L;
+        String testLogin = "old-login";
+        String testDisplayName = "display-name";
+        String testPasswordHash = "password-hash";
+        boolean testIsDeleted = false;
+        String maskConstant = "-";
+
+        UserEntity testUser = new UserEntity();
+        testUser.setId(id);
+        testUser.setLogin(testLogin);
+        testUser.setDisplayName(testDisplayName);
+        testUser.setPasswordHash(testPasswordHash);
+        testUser.setDeleted(testIsDeleted);
+
+        when(userRepository.findByIdAndIsDeletedFalse(id)).thenReturn(Optional.of(testUser));
+
+        userService.deleteUser(id);
+
+        ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(userRepository, times(1)).save(captor.capture());
+
+        UserEntity captorUser = captor.getValue();
+        assertNotEquals(testLogin, captorUser.getLogin());
+        assertEquals(maskConstant, captorUser.getDisplayName());
+        assertEquals(maskConstant, captorUser.getPasswordHash());
+        assertTrue(captorUser.isDeleted());
     }
 }

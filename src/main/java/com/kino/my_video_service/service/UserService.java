@@ -7,6 +7,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -26,9 +28,7 @@ public class UserService {
         }
 
         UserEntity userEntity = new UserEntity();
-        userEntity.setLogin(login);
-        userEntity.setDisplayName(displayName);
-        userEntity.setPasswordHash(passwordEncoder.encode(password));
+        setUserFields(userEntity, login, displayName, passwordEncoder.encode(password), false);
 
         return userRepository.save(userEntity);
     }
@@ -44,25 +44,25 @@ public class UserService {
         return userEntity;
     }
 
-    public UserEntity findUserById(Long id){
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+    public UserEntity findUserById(Long id) {
+        return userRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public List<UserEntity> findAll() {
-        return userRepository.findAll();
+        return userRepository.findAllByIsDeletedFalse();
     }
 
-    public UserEntity patchDisplayName(Long id, String displayName){
+    public UserEntity patchDisplayName(Long id, String displayName) {
         UserEntity userEntity = findUserById(id);
         userEntity.setDisplayName(displayName);
         userRepository.save(userEntity);
         return userEntity;
     }
 
-    public UserEntity patchLogin(Long id, String newLogin){
+    public UserEntity patchLogin(Long id, String newLogin) {
         UserEntity userEntity = findUserById(id);
 
-        if (newLogin.equals(userEntity.getLogin())){
+        if (newLogin.equals(userEntity.getLogin())) {
             throw new SameLoginException(id, userEntity.getLogin(), newLogin);
         }
         if (userRepository.existsByLogin(newLogin)) {
@@ -74,10 +74,10 @@ public class UserService {
         return userEntity;
     }
 
-    public void patchPassword(Long id, String oldPassword, String newPassword){
+    public void patchPassword(Long id, String oldPassword, String newPassword) {
         UserEntity userEntity = findUserById(id);
 
-        if (!passwordEncoder.matches(oldPassword, userEntity.getPasswordHash())){
+        if (!passwordEncoder.matches(oldPassword, userEntity.getPasswordHash())) {
             throw new WrongPasswordException(id);
         }
 
@@ -85,7 +85,30 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
-    public void deleteUser(Long id){
-        userRepository.deleteById(id);
+    public void deleteUser(Long id) {
+        Optional<UserEntity> optionalUser = userRepository.findByIdAndIsDeletedFalse(id);
+
+        if (optionalUser.isPresent()) {
+            String maskLogin = UUID.randomUUID() + "_" + id;
+            String maskDisplayName = "-";
+            String maskPasswordHash = "-";
+            boolean isDeleted = true;
+
+            UserEntity user = optionalUser.get();
+            setUserFields(user, maskLogin, maskDisplayName, maskPasswordHash, isDeleted);
+
+            userRepository.save(user);
+        }
+    }
+
+    private void setUserFields(
+            UserEntity userEntity, String login,
+            String displayName, String passwordHash,
+            boolean isDeleted
+    ) {
+        userEntity.setLogin(login);
+        userEntity.setDisplayName(displayName);
+        userEntity.setPasswordHash(passwordHash);
+        userEntity.setDeleted(isDeleted);
     }
 }
