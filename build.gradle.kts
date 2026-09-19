@@ -6,6 +6,7 @@ plugins {
 
 group = "com.kino"
 version = "0.0.1-SNAPSHOT"
+val mockitoAgent = configurations.create("mockitoAgent")
 
 java {
 	toolchain {
@@ -30,8 +31,10 @@ dependencies {
 	testCompileOnly("org.projectlombok:lombok")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testAnnotationProcessor("org.projectlombok:lombok")
+	mockitoAgent("org.mockito:mockito-core") { isTransitive = false }
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	jvmArgs("-javaagent:${mockitoAgent.asPath}")
 }
