@@ -72,7 +72,7 @@ public class UserServiceTest {
         UserEntity testUser = new UserEntity();
         String testLogin = "testLogin";
         String testPassword = "testPassword";
-        when(userRepository.findByLogin(testLogin)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByLoginAndIsDeletedFalse(testLogin)).thenReturn(Optional.of(testUser));
         assertThrows(
                 FailedAuthenticationException.class,
                 () -> userService.authenticationUser(testLogin, testPassword)
@@ -84,7 +84,7 @@ public class UserServiceTest {
         UserEntity testUser = new UserEntity();
         String testLogin = "testLogin";
         String testPassword = "testPassword";
-        when(userRepository.findByLogin(testLogin)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByLoginAndIsDeletedFalse(testLogin)).thenReturn(Optional.of(testUser));
         when(passwordEncoder.matches(testPassword, testUser.getPasswordHash())).thenReturn(true);
         UserEntity testLoadUser = userService.authenticationUser(testLogin, testPassword);
         assertEquals(testUser, testLoadUser);

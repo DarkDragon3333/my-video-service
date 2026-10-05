@@ -35,7 +35,7 @@ public class UserService {
 
     public UserEntity authenticationUser(String login, String password) {
         UserEntity userEntity =
-                userRepository.findByLogin(login).orElseThrow(FailedAuthenticationException::new);
+                userRepository.findByLoginAndIsDeletedFalse(login).orElseThrow(FailedAuthenticationException::new);
 
         if (!passwordEncoder.matches(password, userEntity.getPasswordHash())) {
             throw new FailedAuthenticationException();
